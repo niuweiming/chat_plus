@@ -43,41 +43,6 @@
             </template>
           </div>
 
-          <!-- <div class="content" :style="{ height: leftBoxHeight + 'px' }">
-            <el-row v-for="chat in chatList" :key="chat.chat_id">
-              <div
-                :class="
-                  chat.chat_id === activeChat.chat_id
-                    ? 'chat-list-item active'
-                    : 'chat-list-item'
-                "
-                @click="changeChat(chat)"
-              >
-                <el-image :src="chat.icon" class="avatar" />
-                <span class="chat-title-input" v-if="chat.edit">
-                  <el-input
-                    v-model="tmpChatTitle"
-                    size="small"
-                    @keydown="titleKeydown($event, chat)"
-                    placeholder="请输入会话标题"
-                  />
-                </span>
-                <span v-else class="chat-title">{{ chat.title }}</span>
-                <span class="btn btn-check" v-if="chat.edit || chat.removing">
-                  <el-icon @click="confirm($event, chat)"><Check /></el-icon>
-                  <el-icon @click="cancel($event, chat)"><Close /></el-icon>
-                </span>
-                <span class="btn" v-else>
-                  <el-icon title="编辑" @click="editChatTitle($event, chat)"
-                    ><Edit
-                  /></el-icon>
-                  <el-icon title="删除会话" @click="removeChat($event, chat)"
-                    ><Delete
-                  /></el-icon>
-                </span>
-              </div>
-            </el-row>
-          </div> -->
         </div>
 
         <div class="tool-box">

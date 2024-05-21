@@ -2,69 +2,83 @@
   <div class="chat-line chat-line-reply">
     <div class="chat-line-inner">
       <div class="chat-icon">
-        <img :src="icon" alt="ChatGPT">
+        <img :src="icon" alt="ChatGPT" />
       </div>
 
       <div class="chat-item">
-        <div class="content" v-html="content" ></div>
-        <el-button  @click ="review(true)" :disabled='isdisabled' :type =button_type>
-            满意
-           </el-button>
-           <el-button @click ="review(false)" :disabled='isdisabled' :type =button_type2>
-            不满意
-           </el-button>
+        <div class="content" v-html="content"></div>
+        <el-button
+          @click="review(true)"
+          :disabled="isdisabled"
+          :type="button_type"
+        >
+          满意
+        </el-button>
+        <el-button
+          @click="review(false)"
+          :disabled="isdisabled"
+          :type="button_type2"
+        >
+          不满意
+        </el-button>
         <div class="bar" v-if="createdAt !== ''">
-          <span class="bar-item"><el-icon><Clock/></el-icon> {{ createdAt }}</span>
+          <span class="bar-item"
+            ><el-icon><Clock /></el-icon> {{ createdAt }}</span
+          >
           <span class="bar-item">Tokens: {{ tokens }}</span>
           <el-tooltip
-              class="box-item"
-              effect="dark"
-              content="复制回答"
-              placement="bottom"
+            class="box-item"
+            effect="dark"
+            content="复制回答"
+            placement="bottom"
           >
-            <el-button type="info" class="copy-reply" :data-clipboard-text="orgContent">
+            <el-button
+              type="info"
+              class="copy-reply"
+              :data-clipboard-text="orgContent"
+            >
               <el-icon>
-                <DocumentCopy/>
+                <DocumentCopy />
               </el-icon>
             </el-button>
-          
           </el-tooltip>
         </div>
         <!-- <div></div> -->
       </div>
-    
     </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
-import {defineComponent} from "vue"
-import {Clock, DocumentCopy, Position ,mounted} from "@element-plus/icons-vue";
-import { httpPost } from '@/utils/http';
-import { cellGroupProps } from 'vant';
-import {setAdminToken, getSessionId} from "@/store/session";
+import axios from "axios";
+import { defineComponent } from "vue";
+import {
+  Clock,
+  DocumentCopy,
+  Position,
+  mounted,
+} from "@element-plus/icons-vue";
+import { httpPost } from "@/utils/http";
+import { cellGroupProps } from "vant";
+import { setAdminToken, getSessionId } from "@/store/session";
 
 import { user_infoStore } from "@/store/user_info";
 
-
-
-
 export default defineComponent({
-  name: 'ChatReply',
-  components: {Position, Clock, DocumentCopy},
+  name: "ChatReply",
+  components: { Position, Clock, DocumentCopy },
   props: {
     content: {
       type: String,
-      default: '',
+      default: "",
     },
     orgContent: {
       type: String,
-      default: '',
+      default: "",
     },
     createdAt: {
       type: String,
-      default: '',
+      default: "",
     },
     tokens: {
       type: Number,
@@ -72,57 +86,56 @@ export default defineComponent({
     },
     icon: {
       type: String,
-      default: 'images/gpt-icon.png',
+      default: "images/gpt-icon.png",
     },
-    chatData_pay:{
-      type:Object,
+    chatData_pay: {
+      type: Object,
     },
-    bot_id:{
-
+    bot_id: {
+      type: String,
     },
   },
   data() {
     return {
       finalTokens: this.tokens,
-      isdisabled:false,
-      isdisabled_no:false,
-      button_type:"",
-      button_type2:"",
-    }
+      isdisabled: false,
+      isdisabled_no: false,
+      button_type: "",
+      button_type2: "",
+    };
   },
-  methods:{
-    review(isSatisfied){
-      const prev_content = this.chatData_pay[this.chatData_pay.length-2]
-      
-      console.log(prev_content.orgContent)
-      const username = localStorage.getItem('username')
-      const user_sessionID  = getSessionId()
-      // const user_sessionIDString = String(user_sessionID);
+  methods: {
+    review(isSatisfied) {
+      const prev_content = this.chatData_pay[this.chatData_pay.length - 2];
 
+      console.log(prev_content.orgContent);
+      const username = localStorage.getItem("username");
+      const user_sessionID = getSessionId();
+      // const user_sessionIDString = String(user_sessionID);
+s
       const reviewData = {
-        userid :username ,
-        question:prev_content.orgContent,
-        botsid:this.bot_id
+        userid: username,
+        question: prev_content.orgContent,
+        botsid: this.bot_id,
       };
 
       //改变样式 如果不满意发送请求
-      this.isdisabled = true;  
-      if(isSatisfied ==true){
-        this.button_type = 'primary'
-      }else if(isSatisfied==false){
-        this.button_type2 = 'danger';
-        httpPost('/api/chatbot/review',reviewData)
-      .then(response => {
-        console.log('Review submitted:',response);
-      })
-      .catch(error => {
-        console.log(error);
-      })
+      this.isdisabled = true;
+      if (isSatisfied == true) {
+        this.button_type = "primary";
+      } else if (isSatisfied == false) {
+        this.button_type2 = "danger";
+        httpPost("/api/chatbot/review", reviewData)
+          .then((response) => {
+            console.log("Review submitted:", response);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       }
-  
-    }
-  }
-})
+    },
+  },
+});
 </script>
 
 <style lang="stylus">
@@ -306,5 +319,4 @@ export default defineComponent({
 
   }
 }
-
 </style>
