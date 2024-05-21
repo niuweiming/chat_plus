@@ -20,8 +20,6 @@
                 </el-icon>
               </template>
             </el-input>
-
-           
           </div>
 
           <div class="content" :style="{ height: leftBoxHeight + 'px' }">
@@ -194,6 +192,8 @@
                 </el-button>
               </a>
             </el-tooltip>
+
+          
           </div>
         </div>
 
@@ -398,7 +398,8 @@ const textInput = ref(null);
 const showNotice = ref(false);
 const notice = ref("");
 const noticeKey = ref("SYSTEM_NOTICE");
-let isQuestion = ref(true);
+
+
 
 if (isMobile()) {
   router.replace("/mobile");
@@ -599,7 +600,7 @@ const newChat = () => {
 };
 
 //专业问答的 新建会话
-function newChat_question(chat_id_payload,title_pay) {
+function newChat_question(chat_id_payload, title_pay) {
   if (!isLogin.value) {
     showLoginDialog.value = true;
     return;
@@ -616,7 +617,6 @@ function newChat_question(chat_id_payload,title_pay) {
     newChatItem.value !== null &&
     newChatItem.value["role_id"] === roles.value[0]["role_id"]
   ) {
-   
     return;
   }
   // 获取当前聊天角色图标
@@ -640,8 +640,7 @@ function newChat_question(chat_id_payload,title_pay) {
   showStopGenerate.value = false;
   showReGenerate.value = false;
   connect(chat_id_payload, roleId.value);
-console.log(newChatItem.value)
-
+  console.log(newChatItem.value);
 }
 // 切换会话
 const changeChat = (chat) => {
@@ -995,7 +994,7 @@ const sendMessage = function () {
 
   showHello.value = false;
   disableInput(false);
-  console.log(activeChat.value)
+  console.log(activeChat.value);
 
   //判断输入逻辑
   if (
@@ -1003,7 +1002,7 @@ const sendMessage = function () {
     activeChat.value.chat_id == "2222" ||
     activeChat.value.chat_id == "3333"
   ) {
-    console.log("http  发送")
+    console.log("http  发送");
     httpPost("api/chatbot/new", {
       sessionid: "",
       chatid: "",

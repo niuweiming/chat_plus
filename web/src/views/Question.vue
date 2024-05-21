@@ -213,6 +213,28 @@
                 </el-button>
               </a>
             </el-tooltip>
+            <el-tooltip
+              class="box-item"
+              effect="dark"
+              content="个人信箱"
+              placement="bottom"
+            >
+              <el-button type="success" circle @click="showTable">
+                <el-dialog
+                  v-model="dialogTableVisible"
+                  title="个人信箱"
+                  width="800"
+                >
+                  <el-table :data="gridData">
+                    <el-table-column property="date" label="Question" />
+                    <!-- <el-table-column property="name" label="Name" width="200" /> -->
+                    <el-table-column property="address" label="Answer" />
+                  </el-table>
+                </el-dialog>
+
+                <i class="iconfont icon-github"></i>
+              </el-button>
+            </el-tooltip>
           </div>
         </div>
 
@@ -419,6 +441,8 @@ const notice = ref("");
 const noticeKey = ref("SYSTEM_NOTICE");
 let isQuestion = ref(true);
 let chocice_chat = ref("");
+let dialogTableVisible = ref(false);
+let gridData = ref();
 
 if (isMobile()) {
   router.replace("/mobile");
@@ -688,22 +712,6 @@ const loadChat = function (chat) {
   connect(chat.chat_id, chat.role_id);
 };
 
-// 编辑会话标题
-const curOpt = ref("");
-const tmpChatTitle = ref("");
-const editChatTitle = function (event, chat) {
-  event.stopPropagation();
-  chat.edit = true;
-  curOpt.value = "edit";
-  tmpChatTitle.value = chat.title;
-};
-
-const titleKeydown = (e, chat) => {
-  if (e.keyCode === 13) {
-    e.stopPropagation();
-    confirm(e, chat);
-  }
-};
 // 确认修改
 const confirm = function (event, chat) {
   event.stopPropagation();
@@ -838,7 +846,7 @@ const connect = function (chat_id, role_id) {
     });
   };
   const _socket = new WebSocket(
-    host +
+    "http://b65cra.natappfree.cc" +
       `/api/chat/new?session_id=${_sessionId}&role_id=${role_id}&chat_id=${chat_id}&model_id=${
         modelID.value
       }&token=${getUserToken()}`
@@ -982,8 +990,8 @@ const autofillPrompt = (text) => {
   textInput.value.focus();
   // sendMessage()
 };
-// 发送消息
 
+// 发送消息
 const sendMessage = function () {
   if (!isLogin.value) {
     showLoginDialog.value = true;
@@ -1255,6 +1263,18 @@ const notShow = () => {
 // 插入文件路径
 const insertURL = (url) => {
   prompt.value += " " + url + " ";
+};
+
+// 显示表格
+const showTable = () => {
+  dialogTableVisible.value = true;
+  httpGet("/api/chat/table")
+    .then((res) => {
+      gridData.value = res.data;
+    })
+    .catch((e) => {
+      ElMessage.error("加载个人信箱失败：" + e.message);
+    });
 };
 </script>
 
