@@ -7,10 +7,10 @@
 
       <div class="chat-item">
         <div class="content" v-html="content" ></div>
-        <el-button  @click ="review(true)" :disabled='isdisabled'>
+        <el-button  @click ="review(true)" :disabled='isdisabled' :type =button_type>
             满意
            </el-button>
-           <el-button @click ="review(false)" :disabled='isdisabled' >
+           <el-button @click ="review(false)" :disabled='isdisabled' :type =button_type2>
             不满意
            </el-button>
         <div class="bar" v-if="createdAt !== ''">
@@ -73,37 +73,53 @@ export default defineComponent({
     icon: {
       type: String,
       default: 'images/gpt-icon.png',
-    }
+    },
+    chatData_pay:{
+      type:Object,
+    },
+    bot_id:{
+
+    },
   },
   data() {
     return {
       finalTokens: this.tokens,
       isdisabled:false,
       isdisabled_no:false,
+      button_type:"",
+      button_type2:"",
     }
   },
   methods:{
     review(isSatisfied){
-
-  this.isdisabled = true;  
-
+      const prev_content = this.chatData_pay[this.chatData_pay.length-2]
+      
+      console.log(prev_content.orgContent)
       const username = localStorage.getItem('username')
       const user_sessionID  = getSessionId()
       // const user_sessionIDString = String(user_sessionID);
+
       const reviewData = {
-        Userid :user_sessionID  ,
-        Content:this.orgContent,
-        Name:username,
-        Review : isSatisfied ? 1:0,
+        userid :username ,
+        question:prev_content.orgContent,
+        botsid:this.bot_id
       };
-      httpPost('/api/chat/review',reviewData)
+
+      //改变样式 如果不满意发送请求
+      this.isdisabled = true;  
+      if(isSatisfied ==true){
+        this.button_type = 'primary'
+      }else if(isSatisfied==false){
+        this.button_type2 = 'danger';
+        httpPost('/api/chatbot/review',reviewData)
       .then(response => {
         console.log('Review submitted:',response);
       })
       .catch(error => {
         console.log(error);
       })
-        
+      }
+  
     }
   }
 })
@@ -153,7 +169,9 @@ export default defineComponent({
           a {
             color #20a0ff
           }
-
+          #satisfied::active{
+            background-color: #4b78ed !important
+          }
           // control the image size in content
 
           img {

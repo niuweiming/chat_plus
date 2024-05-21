@@ -8,10 +8,10 @@ type Review struct {
 }
 
 type Mailbox struct {
-	Id           int    `gorm:"column:id;AUTO_INCREMENT;primary_key"`
-	Userid       string `gorm:"column:userid;NOT NULL"`
-	Question     string `gorm:"column:question;NOT NULL"`
-	Botsid       string `gorm:"column:botsid;NOT NULL"`
-	ReplyId      int    `gorm:"column:reply_id;default:0"`
-	ReplyContent string `gorm:"column:reply_content;default:该问题暂未解决"`
+	Id           int    `json:"id"`
+	Userid       string `json:"userid"`
+	Question     string `json:"question"`
+	Botsid       string `json:"botsid"`
+	ReplyId      int    `json:"reply_id"`
+	ReplyContent string `json:"reply_content"`
 }

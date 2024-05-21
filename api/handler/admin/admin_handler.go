@@ -48,12 +48,13 @@ func (h *ManagerHandler) Login(c *gin.Context) {
 		resp.ERROR(c, types.InvalidArgs)
 		return
 	}
-	if data.Username == "qanythingbotid" {
+	if data.Username == "BOTd252fd34980247d9813b87be54241072" || data.Username == "BOT323a8aecc5204dbba89f3485b8ebc592" || data.Username == "BOT40b024cec5b34d67961d135560247d40" {
 		res, err := loginbots(data)
 		if err != nil {
 			return
 		}
-		c.JSON(200, res)
+		resp.SUCCESS(c, res)
+		return
 	}
 
 	//add captcha
@@ -282,8 +283,9 @@ type result struct {
 	Token string `json:"token"`
 }
 
+// 机器人管理员登录
 func loginbots(data Manager) (res result, err error) {
-	if data.Password == "BOTd252fd34980247d9813b87be54241072" || data.Password == "BOT323a8aecc5204dbba89f3485b8ebc592" || data.Password == "BOT40b024cec5b34d67961d135560247d40" {
+	if data.Password == "root" {
 		// 创建 token
 		token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 			"user_id": "root",

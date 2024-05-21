@@ -25,17 +25,17 @@
               <div class="question_button">
                 <el-button
                   type="primary"
-                  @click="newChat_question('1111', '升学规划')"
+                  @click="newChat_question('BOTd252fd34980247d9813b87be54241072', '升学规划')"
                 >
                   升学规划 </el-button
                 ><el-button
                   type="primary"
-                  @click="newChat_question('2222', '心理咨询')"
+                  @click="newChat_question('BOT323a8aecc5204dbba89f3485b8ebc592', '心理咨询')"
                 >
                   心理咨询 </el-button
                 ><el-button
                   type="primary"
-                  @click="newChat_question('3333', '法律咨询')"
+                  @click="newChat_question('BOT40b024cec5b34d67961d135560247d40', '法律咨询')"
                 >
                   法律咨询
                 </el-button>
@@ -226,9 +226,9 @@
                   width="800"
                 >
                   <el-table :data="gridData">
-                    <el-table-column property="date" label="Question" />
+                    <el-table-column property="question" label="Question" />
                     <!-- <el-table-column property="name" label="Name" width="200" /> -->
-                    <el-table-column property="address" label="Answer" />
+                    <el-table-column property="reply_content" label="Answer" />
                   </el-table>
                 </el-dialog>
 
@@ -265,6 +265,8 @@
                     :created-at="dateFormat(item['created_at'])"
                     :tokens="item['tokens']"
                     :content="item.content"
+                    :chatData_pay="chatData"
+                    :bot_id="chat_id"
                   />
                   <chat-mid-journey
                     v-else-if="item.type === 'mj'"
@@ -443,6 +445,7 @@ let isQuestion = ref(true);
 let chocice_chat = ref("");
 let dialogTableVisible = ref(false);
 let gridData = ref();
+const chat_id= ref(localStorage.getItem("chat_id"))
 
 if (isMobile()) {
   router.replace("/mobile");
@@ -599,53 +602,53 @@ const _newChat = () => {
     newChat();
   }
 };
-// 新建会话
-const newChat = () => {
-  if (!isLogin.value) {
-    showLoginDialog.value = true;
-    return;
-  }
-  const role = getRoleById(roleId.value);
-  if (role.key === "gpt") {
-    showHello.value = true;
-  } else {
-    showHello.value = false;
-  }
-  // 已有新开的会话
-  if (
-    newChatItem.value !== null &&
-    newChatItem.value["role_id"] === roles.value[0]["role_id"]
-  ) {
-    return;
-  }
+// // 新建会话
+// const newChat = () => {
+//   if (!isLogin.value) {
+//     showLoginDialog.value = true;
+//     return;
+//   }
+//   const role = getRoleById(roleId.value);
+//   if (role.key === "gpt") {
+//     showHello.value = true;
+//   } else {
+//     showHello.value = false;
+//   }
+//   // 已有新开的会话
+//   if (
+//     newChatItem.value !== null &&
+//     newChatItem.value["role_id"] === roles.value[0]["role_id"]
+//   ) {
+//     return;
+//   }
 
-  // 获取当前聊天角色图标
-  let icon = "";
-  roles.value.forEach((item) => {
-    if (item["id"] === roleId.value) {
-      icon = item["icon"];
-    }
-  });
+//   // 获取当前聊天角色图标
+//   let icon = "";
+//   roles.value.forEach((item) => {
+//     if (item["id"] === roleId.value) {
+//       icon = item["icon"];
+//     }
+//   });
 
-  newChatItem.value = {
-    chat_id: "",
-    icon: icon,
-    role_id: roleId.value,
-    model_id: modelID.value,
-    title: "",
-    edit: false,
-    removing: false,
-  };
-  activeChat.value = {}; //取消激活的会话高亮
-  showStopGenerate.value = false;
-  showReGenerate.value = false;
-  connect(null, roleId.value);
-};
+//   newChatItem.value = {
+//     chat_id: "",
+//     icon: icon,
+//     role_id: roleId.value,
+//     model_id: modelID.value,
+//     title: "",
+//     edit: false,
+//     removing: false,
+//   };
+//   activeChat.value = {}; //取消激活的会话高亮
+//   showStopGenerate.value = false;
+//   showReGenerate.value = false;
+//   connect(null, roleId.value);
+// };
 
 //专业问答的 新建会话
 function newChat_question(chat_id_payload, title_pay) {
   chocice_chat.value = chat_id_payload;
-  console.log(chocice_chat.value);
+
   if (!isLogin.value) {
     showLoginDialog.value = true;
     return;
@@ -684,9 +687,15 @@ function newChat_question(chat_id_payload, title_pay) {
   activeChat.value = {}; //取消激活的会话高亮
   showStopGenerate.value = false;
   showReGenerate.value = false;
+  //切换会话
+  localStorage.setItem("chat_id", chat_id_payload);
+  console.log(chatData.value)
+  // loadChat(chat);
+
   connect(chat_id_payload, roleId.value);
-  console.log(newChatItem.value);
 }
+
+
 // 切换会话
 const changeChat = (chat) => {
   localStorage.setItem("chat_id", chat.chat_id);
@@ -846,7 +855,7 @@ const connect = function (chat_id, role_id) {
     });
   };
   const _socket = new WebSocket(
-    "http://b65cra.natappfree.cc" +
+    host +
       `/api/chat/new?session_id=${_sessionId}&role_id=${role_id}&chat_id=${chat_id}&model_id=${
         modelID.value
       }&token=${getUserToken()}`
@@ -1024,11 +1033,11 @@ const sendMessage = function () {
   showHello.value = false;
   disableInput(false);
 
-  console.log(chocice_chat.value, "12312312");
+
 
   //判断输入逻辑
   switch (chocice_chat.value) {
-    case "1111":
+    case "BOTd252fd34980247d9813b87be54241072":
       httpPost("api/chatbot/new", {
         sessionid: "",
         chatid: "",
@@ -1049,7 +1058,7 @@ const sendMessage = function () {
           });
         });
       break;
-    case "2222":
+    case "BOT323a8aecc5204dbba89f3485b8ebc592":
       httpPost("api/chatbot/new", {
         sessionid: "",
         chatid: "",
@@ -1070,7 +1079,7 @@ const sendMessage = function () {
           });
         });
       break;
-    case "3333":
+    case "BOT40b024cec5b34d67961d135560247d40":
       httpPost("api/chatbot/new", {
         sessionid: "",
         chatid: "",
@@ -1265,15 +1274,23 @@ const insertURL = (url) => {
   prompt.value += " " + url + " ";
 };
 
-// 显示表格
+//个人信箱 显示表格
 const showTable = () => {
+  const userid = localStorage.getItem('username');
+  console.log(userid)
+  let useridpay ={
+    userid:userid,
+  }
   dialogTableVisible.value = true;
-  httpGet("/api/chat/table")
+  httpGet(`/api/chatbot/view`,useridpay)
     .then((res) => {
+      console.log(res.data)
       gridData.value = res.data;
     })
     .catch((e) => {
-      ElMessage.error("加载个人信箱失败：" + e.message);
+      console.log(e)
+      gridData.value = e;
+      // ElMessage.error("加载个人信箱失败：" + e.message);
     });
 };
 </script>

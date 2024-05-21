@@ -283,6 +283,7 @@ func main() {
 			group := s.Engine.Group("api/chatbot/")
 			group.POST("new", h.ChatBotsHandler)
 			group.POST("review", h.Recordmail)
+			group.GET("view", h.View)
 		}),
 
 		// 管理后台控制器

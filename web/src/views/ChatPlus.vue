@@ -31,6 +31,7 @@
                     : 'chat-list-item'
                 "
                 @click="changeChat(chat)"
+                
               >
                 <el-image :src="chat.icon" class="avatar" />
                 <span class="chat-title-input" v-if="chat.edit">
@@ -224,6 +225,8 @@
                     :created-at="dateFormat(item['created_at'])"
                     :tokens="item['tokens']"
                     :content="item.content"
+                    :chatData_pay="chatData"
+                    :bot_id="chat_id"
                   />
                   <chat-mid-journey
                     v-else-if="item.type === 'mj'"
@@ -398,7 +401,7 @@ const textInput = ref(null);
 const showNotice = ref(false);
 const notice = ref("");
 const noticeKey = ref("SYSTEM_NOTICE");
-
+const chat_id= ref(localStorage.getItem("chat_id"))
 
 
 if (isMobile()) {
@@ -431,6 +434,7 @@ httpGet("/api/config/get?key=notice")
   });
 
 onMounted(() => {
+  console.log("onMounted");
   resizeElement();
   initData();
 
@@ -453,8 +457,10 @@ onUnmounted(() => {
 // 初始化数据
 const initData = () => {
   // 检查会话
+  console.log("checkSession start");
   checkSession()
     .then((user) => {
+      console.log("checkSession success", user);
       loginUser.value = user;
       isLogin.value = true;
 
@@ -596,6 +602,7 @@ const newChat = () => {
   activeChat.value = {}; //取消激活的会话高亮
   showStopGenerate.value = false;
   showReGenerate.value = false;
+  
   connect(null, roleId.value);
 };
 
@@ -639,16 +646,21 @@ function newChat_question(chat_id_payload, title_pay) {
   activeChat.value = {}; //取消激活的会话高亮
   showStopGenerate.value = false;
   showReGenerate.value = false;
+
+  localStorage.setItem("chat_id", chat_id_payload);
   connect(chat_id_payload, roleId.value);
   console.log(newChatItem.value);
 }
 // 切换会话
 const changeChat = (chat) => {
   localStorage.setItem("chat_id", chat.chat_id);
+  // localStorage.setItem("chat_id", chat_id_payload);
+  console.log(chatData.value)
   loadChat(chat);
 };
 
 const loadChat = function (chat) {
+ 4
   if (!isLogin.value) {
     showLoginDialog.value = true;
     return;
@@ -1184,6 +1196,8 @@ const notShow = () => {
 const insertURL = (url) => {
   prompt.value += " " + url + " ";
 };
+
+
 </script>
 
 <style scoped lang="stylus">

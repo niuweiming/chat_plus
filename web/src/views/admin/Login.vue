@@ -68,6 +68,7 @@ const keyupHandle = (e) => {
 }
 
 const login = function () {
+  
   if (username.value === '') {
     return ElMessage.error('请输入用户名');
   }
@@ -77,8 +78,11 @@ const login = function () {
 
   httpPost('/api/admin/login', {username: username.value.trim(), password: password.value.trim()}).then(res => {
     setAdminToken(res.data.token)
+
     router.push("/admin")
   }).catch((e) => {
+    // setAdminToken(res.data.token)
+    // router.push("/admin")
     ElMessage.error('登录失败，' + e.message)
   })
 }

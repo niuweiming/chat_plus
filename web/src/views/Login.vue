@@ -96,6 +96,7 @@ const handleKeyup = (e) => {
 };
 
 const login = function () {
+  console.log(username.value)
   if (username.value.trim() === '') {
     return ElMessage.error("请输入用户民")
   }
@@ -104,7 +105,7 @@ const login = function () {
   }
 
   httpPost('/api/user/login', {username: username.value.trim(), password: password.value.trim()}).then((res) => {
-  
+    
     localStorage.setItem("username",username.value);
     // user_infoStore().setusername(username) ;
     setUserToken(res.data)

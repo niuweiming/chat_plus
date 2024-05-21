@@ -187,6 +187,7 @@ func GetKbid(userid string, botid string) []string {
 	return responseBody.Data[0].KbIDs
 }
 
+// 不满意发送给专家
 func (h *ChatBotHandler) Recordmail(c *gin.Context) {
 	logger.Error("执行Recordmail函数")
 	recordmail := &vo.Mailbox{}
@@ -205,4 +206,14 @@ func (h *ChatBotHandler) Recordmail(c *gin.Context) {
 	}
 }
 
-func (h *ChatBotHandler) view(c *gin.Context) {}
+// 查看个人信箱
+func (h *ChatBotHandler) View(c *gin.Context) {
+	logger.Error("查看个人信箱")
+	userid := c.Query("userid")
+	result := &[]vo.Mailbox{}
+	if err := h.DB.Where("userid = ?", userid).Find(&result).Error; err != nil {
+		logger.Error("查询失败", err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	}
+	c.JSON(http.StatusOK, result)
+}

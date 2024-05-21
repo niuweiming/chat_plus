@@ -289,7 +289,9 @@ const submitLogin = () => {
   }
 
   httpPost('/api/user/login', data.value).then((res) => {
+    console.log(res)
     setUserToken(res.data)
+    localStorage.setItem("username",data.value.username);
     ElMessage.success("登录成功！")
     emits("hide")
     emits('success')

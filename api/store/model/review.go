@@ -17,3 +17,7 @@ type Mailboxs struct {
 	ReplyId      int    `gorm:"column:reply_id;default:0"`
 	ReplyContent string `gorm:"column:reply_content;default:该问题暂未解决"`
 }
+
+func (Mailboxs) TableName() string {
+	return "chatgpt_mailboxes"
+}

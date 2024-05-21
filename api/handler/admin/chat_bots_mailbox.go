@@ -4,6 +4,7 @@ import (
 	"chatplus/core"
 	"chatplus/handler"
 	"chatplus/service/oss"
+	"chatplus/store/model"
 	"chatplus/store/vo"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v8"
@@ -29,9 +30,11 @@ func NewChatBotmailbox(app *core.AppServer, db *gorm.DB, redis *redis.Client, ma
 func (h *ChatBotmailbox) List(c *gin.Context) {
 	botid := c.Query("botid")
 	result := &[]vo.Mailbox{}
-	err := h.DB.Where("bot_id = ? AND reply_id = ?", botid, 0).Find(&result).Error
+	err := h.DB.Where("botsid = ? AND reply_id = ?", botid, 0).Find(&result).Error
 	if err != nil {
 		logger.Error("查询出错", err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 	c.JSON(http.StatusOK, result)
 }
@@ -42,18 +45,21 @@ func (h *ChatBotmailbox) Upload(c *gin.Context) {
 	if err := c.ShouldBindJSON(&reply); err != nil {
 		logger.Error("作答参数绑定失败", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
-	res := &vo.Mailbox{}
-	err := h.DB.Where("useid = ? AND question = ?", reply.Userid, reply.Question).First(res).Error
+	res := &model.Mailboxs{}
+	err := h.DB.Where("userid = ? AND question = ?", reply.Userid, reply.Question).First(res).Error
 	if err != nil {
 		logger.Error("查询对应记录出错", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 	res.ReplyId = reply.ReplyId
-	res.Question = reply.Question
+	res.ReplyContent = reply.ReplyContent
 	if err := h.DB.Save(res).Error; err != nil {
 		logger.Error("更新失败", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 	c.JSON(http.StatusOK, res)
 }

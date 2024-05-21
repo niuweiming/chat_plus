@@ -2,8 +2,8 @@ import axios from "axios";
 import { getAdminToken, getSessionId, getUserToken } from "@/store/session";
 
 axios.defaults.timeout = 30000;
-// axios.defaults.baseURL = process.env.VUE_APP_API_HOST
-axios.defaults.baseURL = "http://b65cra.natappfree.cc";
+axios.defaults.baseURL = process.env.VUE_APP_API_HOST
+// axios.defaults.baseURL = "http://b65cra.natappfree.cc";
 axios.defaults.withCredentials = true;
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
@@ -14,6 +14,7 @@ axios.interceptors.request.use(
     config.headers["Chat-Token"] = getSessionId();
     config.headers["Authorization"] = getUserToken();
     config.headers["Admin-Authorization"] = getAdminToken();
+    // config.headers[""]
     return config;
   },
   (error) => {
