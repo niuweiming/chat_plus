@@ -63,6 +63,7 @@ import { cellGroupProps } from "vant";
 import { setAdminToken, getSessionId } from "@/store/session";
 
 import { user_infoStore } from "@/store/user_info";
+import { ElMessage } from "element-plus";
 
 export default defineComponent({
   name: "ChatReply",
@@ -112,7 +113,7 @@ export default defineComponent({
       const username = localStorage.getItem("username");
       const user_sessionID = getSessionId();
       // const user_sessionIDString = String(user_sessionID);
-s
+      s;
       const reviewData = {
         userid: username,
         question: prev_content.orgContent,
@@ -125,6 +126,9 @@ s
         this.button_type = "primary";
       } else if (isSatisfied == false) {
         this.button_type2 = "danger";
+        ElMessage(
+          "您的请求已收到，该问题会在24小时内由人工专家作答，重新回复您，请留意页面右上角个人信箱"
+        );
         httpPost("/api/chatbot/review", reviewData)
           .then((response) => {
             console.log("Review submitted:", response);

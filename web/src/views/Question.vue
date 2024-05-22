@@ -25,24 +25,38 @@
               <div class="question_button">
                 <el-button
                   type="primary"
-                  @click="newChat_question('BOTd252fd34980247d9813b87be54241072', '升学规划')"
+                  @click="
+                    newChat_question(
+                      'BOTd252fd34980247d9813b87be54241072',
+                      '升学规划'
+                    )
+                  "
                 >
                   升学规划 </el-button
                 ><el-button
                   type="primary"
-                  @click="newChat_question('BOT323a8aecc5204dbba89f3485b8ebc592', '心理咨询')"
+                  @click="
+                    newChat_question(
+                      'BOT323a8aecc5204dbba89f3485b8ebc592',
+                      '心理咨询'
+                    )
+                  "
                 >
                   心理咨询 </el-button
                 ><el-button
                   type="primary"
-                  @click="newChat_question('BOT40b024cec5b34d67961d135560247d40', '法律咨询')"
+                  @click="
+                    newChat_question(
+                      'BOT40b024cec5b34d67961d135560247d40',
+                      '法律咨询'
+                    )
+                  "
                 >
                   法律咨询
                 </el-button>
               </div>
             </template>
           </div>
-
         </div>
 
         <div class="tool-box">
@@ -410,7 +424,7 @@ let isQuestion = ref(true);
 let chocice_chat = ref("");
 let dialogTableVisible = ref(false);
 let gridData = ref();
-const chat_id= ref(localStorage.getItem("chat_id"))
+const chat_id = ref(localStorage.getItem("chat_id"));
 
 if (isMobile()) {
   router.replace("/mobile");
@@ -654,12 +668,11 @@ function newChat_question(chat_id_payload, title_pay) {
   showReGenerate.value = false;
   //切换会话
   localStorage.setItem("chat_id", chat_id_payload);
-  console.log(chatData.value)
+  console.log(chatData.value);
   // loadChat(chat);
 
   connect(chat_id_payload, roleId.value);
 }
-
 
 // 切换会话
 const changeChat = (chat) => {
@@ -998,8 +1011,6 @@ const sendMessage = function () {
   showHello.value = false;
   disableInput(false);
 
-
-
   //判断输入逻辑
   switch (chocice_chat.value) {
     case "BOTd252fd34980247d9813b87be54241072":
@@ -1241,19 +1252,19 @@ const insertURL = (url) => {
 
 //个人信箱 显示表格
 const showTable = () => {
-  const userid = localStorage.getItem('username');
-  console.log(userid)
-  let useridpay ={
-    userid:userid,
-  }
+  const userid = localStorage.getItem("username");
+  console.log(userid);
+  let useridpay = {
+    userid: userid,
+  };
   dialogTableVisible.value = true;
-  httpGet(`/api/chatbot/view`,useridpay)
+  httpGet(`/api/chatbot/view`, useridpay)
     .then((res) => {
-      console.log(res.data)
+      console.log(res.data);
       gridData.value = res.data;
     })
     .catch((e) => {
-      console.log(e)
+      console.log(e);
       gridData.value = e;
       // ElMessage.error("加载个人信箱失败：" + e.message);
     });
