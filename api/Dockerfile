@@ -32,4 +32,4 @@ ENV NODE_ENV=production
 EXPOSE 5768
 
 # 容器启动命令
-CMD ["./main"]
+CMD ["./app"]
