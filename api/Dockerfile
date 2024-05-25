@@ -10,6 +10,10 @@ WORKDIR /app
 # 将宿主机的当前目录下的所有文件复制到容器的/app目录下
 COPY . /app
 
+# 设置Go代理和增加超时时间
+ENV GOPROXY=https://goproxy.io,direct
+ENV GONOSUMDB=*
+
 # 构建Go应用
 RUN go mod download && \
     CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o main .
@@ -23,8 +27,6 @@ COPY --from=builder /app/main /app/
 # 设置工作目录
 WORKDIR /app
 
-
-
 # 设置环境变量
 ENV NODE_ENV=production
 
@@ -32,4 +34,4 @@ ENV NODE_ENV=production
 EXPOSE 5768
 
 # 容器启动命令
-CMD ["./app"]
+CMD ["./main"]
