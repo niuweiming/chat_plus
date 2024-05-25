@@ -1,6 +1,6 @@
 Listen = "0.0.0.0:5678"
 ProxyURL = "" # 如 http://127.0.0.1:7777
-MysqlDsn = "root:root@tcp(localhost:3306)/chatgpt_plus?charset=utf8mb4&collation=utf8mb4_unicode_ci&parseTime=True&loc=Local"
+MysqlDsn = "root:root@tcp(124.223.44.12:3306)/chatgpt_plus?charset=utf8mb4&collation=utf8mb4_unicode_ci&parseTime=True&loc=Local"
 StaticDir = "./static" # 静态资源的目录
 StaticUrl = "/static" # 静态资源访问 URL
 AesEncryptKey = ""
